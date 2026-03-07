@@ -1,7 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
-import { Check, Sprout, Flower2, Crown, Zap, ArrowRight } from "lucide-react";
+import { Check, Zap } from "lucide-react";
+import seedIcon from "@/icons/seed.png";
+import bloomIcon from "@/icons/bloom.png";
+import thriveIcon from "@/icons/thrive.png";
 
 const titleSerif = Cormorant_Garamond({
   subsets: ["latin"],
@@ -26,7 +30,7 @@ const tiers = [
     tagline: "Sign up and enter the rewards loop with member-only updates.",
     price: 999,
     original: 1999,
-    Icon: Sprout,
+    iconSrc: seedIcon,
     accent: "#A8BCA5", // brand green
     accentMuted: "#064e3b",
     glowColor: "rgba(34,197,94,0.14)",
@@ -49,7 +53,7 @@ const tiers = [
       "Unlock stronger earnings and early access once you hit 1000 points.",
     price: 2499,
     original: 4999,
-    Icon: Flower2,
+    iconSrc: bloomIcon,
     accent: "#A8BCA5",
     accentMuted: "#052e16",
     glowColor: "rgba(22,163,74,0.16)",
@@ -71,7 +75,7 @@ const tiers = [
     tagline: "Highest tier — priority treatment and premium experiences.",
     price: 7999,
     original: 15999,
-    Icon: Crown,
+    iconSrc: thriveIcon,
     accent: "#A8BCA5",
     accentMuted: "#022c22",
     glowColor: "rgba(21,128,61,0.18)",
@@ -83,7 +87,10 @@ const tiers = [
       { label: "Welcome voucher", value: "₹2,000" },
       { label: "Priority support", value: "Within 6 h" },
       { label: "Exclusive member drops", value: "Monthly" },
-      { label: "Alignment Circles", value: "Includes 4 Alignment Circles + priority access" },
+      {
+        label: "Alignment Circles",
+        value: "Includes 4 Alignment Circles + priority access",
+      },
     ],
   },
 ] as const;
@@ -99,7 +106,7 @@ const PERK_LABELS = [
   "Alignment Circles",
 ] as const;
 
-/* ─── shared join button (same look everywhere) ──────────── */
+/* ─── shared join button (border magic, green) ──────────── */
 
 function JoinTierButton({
   tierName,
@@ -112,24 +119,16 @@ function JoinTierButton({
     <button
       type="button"
       className={
-        "group relative flex min-w-0 items-center justify-center gap-1.5 rounded-full border border-[#1f2a24] py-2.5 text-sm font-semibold tracking-wide text-[#f5f8f5] shadow-[0_10px_24px_rgba(0,0,0,0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_32px_rgba(0,0,0,0.75)] active:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#A8BCA5] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050807] sm:py-3 " +
+        "relative inline-flex h-12 min-w-0 items-center justify-center overflow-hidden rounded-full p-px focus:outline-none focus:ring-2 focus:ring-[#A8BCA5]/70 focus:ring-offset-2 focus:ring-offset-[#050807] sm:h-13 " +
         className
       }
-      style={{
-        background:
-          "linear-gradient(135deg,#050807,#121914,#2e3f33,#A8BCA5)",
-      }}
     >
       <span
-        className="pointer-events-none absolute inset-px rounded-full opacity-90 mix-blend-screen"
-        style={{
-          background:
-            "radial-gradient(circle at 10% 0%,rgba(255,255,255,0.22),transparent 45%),radial-gradient(circle at 85% 0%,rgba(168,188,165,0.4),transparent 55%)",
-        }}
+        className="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#c5e0c0_0%,#064e3b_50%,#c5e0c0_100%)]"
+        aria-hidden
       />
-      <span className="relative flex items-center gap-1.5">
+      <span className="relative inline-flex h-full w-full items-center justify-center rounded-full bg-[#050807] px-4 py-2 text-sm font-medium tracking-wide text-[#f5f8f5] backdrop-blur-sm">
         Join {tierName}
-        <ArrowRight size={14} className="shrink-0" />
       </span>
     </button>
   );
@@ -151,7 +150,7 @@ export default function Pricing() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(52rem_32rem_at_88%_100%,rgba(5,8,7,0.9),transparent_72%)]" />
       <div className="pointer-events-none absolute inset-0 opacity-[0.08] bg-[radial-gradient(#111816_1px,transparent_0)] bg-size-[26px_26px]" />
 
-      <div className="relative mx-auto w-full max-w-6xl overflow-x-hidden">
+      <div className="relative mx-auto w-full min-w-0 max-w-6xl overflow-x-hidden px-0">
         {/* ── heading ───────────────────────────────────── */}
         <div className="text-center">
           <span className="inline-flex items-center gap-1.5 rounded-full border border-[#A8BCA5] bg-[#111816] px-3.5 py-1 text-[11px] font-semibold tracking-[0.18em] text-[#A8BCA5] uppercase">
@@ -176,7 +175,7 @@ export default function Pricing() {
         </div>
 
         {/* ── arch tier cards ───────────────────────────── */}
-        <div className="mt-14 grid gap-7 sm:grid-cols-3">
+        <div className="mt-10 grid min-w-0 max-w-full grid-cols-1 gap-5 sm:mt-14 sm:grid-cols-3 sm:gap-7">
           {tiers.map((tier) => (
             <ArchCard key={tier.id} tier={tier} />
           ))}
@@ -209,7 +208,13 @@ export default function Pricing() {
                     className="bg-[#0c1410] px-6 py-4 text-left text-sm font-semibold text-[#f7faf7]"
                   >
                     <span className="flex items-center gap-1.5">
-                      <t.Icon size={14} style={{ color: t.accent }} />
+                      <Image
+                        src={t.iconSrc}
+                        alt=""
+                        width={20}
+                        height={20}
+                        className="shrink-0"
+                      />
                       <span>{t.name}</span>
                     </span>
                   </th>
@@ -230,7 +235,7 @@ export default function Pricing() {
                     return (
                       <td
                         key={t.id}
-                        className="px-6 py-3 text-sm font-semibold"
+                        className="px-6 py-3 text-sm font-semibold text-[#f1f5f9]"
                       >
                         {perk ? perk.value : "—"}
                       </td>
@@ -289,7 +294,7 @@ function ArchCard({ tier }: { tier: Tier }) {
     tagline,
     price,
     original,
-    Icon,
+    iconSrc,
     accent,
     glowColor,
     borderColor,
@@ -298,82 +303,131 @@ function ArchCard({ tier }: { tier: Tier }) {
   } = tier;
 
   return (
-    <article className="group flex flex-col items-center">
-      {/* featured pill */}
+    <article
+      className={`group flex min-w-0 max-w-full flex-col items-center ${featured ? "relative z-10 sm:scale-[1.02]" : ""}`}
+    >
+      {/* Bloom: soft glow/shadow emanating from behind the card */}
       {featured && (
-        <span
-          className="mb-3 inline-flex items-center justify-center rounded-full border px-3 py-0.5 text-[10px] font-semibold tracking-widest uppercase text-[#7b4a26] bg-[#fff7f0]"
-          style={{ borderColor }}
+        <div
+          className="pointer-events-none absolute -inset-x-4 top-1/2 z-0 -translate-y-1/2 sm:-inset-x-6"
+          aria-hidden
         >
-          Most Popular
-        </span>
+          <div
+            className="mx-auto h-48 w-full max-w-md rounded-full opacity-90 sm:h-56 sm:max-w-lg"
+            style={{
+              background: "radial-gradient(ellipse 80% 50% at 50% 50%, rgba(168,188,165,0.14) 0%, rgba(168,188,165,0.06) 45%, transparent 70%)",
+              filter: "blur(20px)",
+            }}
+          />
+          <div
+            className="absolute inset-0 mx-auto h-40 w-full max-w-sm rounded-full opacity-80 sm:h-52 sm:max-w-md"
+            style={{
+              background: "radial-gradient(ellipse 70% 40% at 50% 60%, rgba(34,197,94,0.08) 0%, transparent 60%)",
+              filter: "blur(24px)",
+            }}
+          />
+        </div>
       )}
 
-      {/* floating icon orb — sits above the arch */}
-      <div
-        className="relative z-10 -mb-8 flex h-16 w-16 items-center justify-center rounded-full border-2 bg-[#050807] shadow-[0_10px_22px_rgba(0,0,0,0.75)] transition-transform duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_14px_30px_rgba(0,0,0,0.9)]"
-        style={{ borderColor }}
-      >
-        <Icon size={28} style={{ color: accent }} />
-      </div>
-
-      {/* arch body */}
-      <div
-        className="relative flex w-full flex-col items-center rounded-[2.1rem] border bg-[#050807] px-7 pb-8 pt-10 text-center shadow-[0_18px_40px_rgba(0,0,0,0.8)]"
-        style={{
-          borderColor,
-          boxShadow: featured
-            ? "0 22px 50px rgba(0,0,0,0.9)"
-            : "0 18px 38px rgba(0,0,0,0.8)",
-        }}
-      >
-
-        {/* name */}
-        <h3
-          className="text-2xl font-semibold text-[#f7faf7]"
-          style={{ fontFamily: "var(--font-pricing-serif)" }}
-        >
-          {name}
-        </h3>
-
-        <p className="mt-1 text-xs font-medium text-[#7ba3b8]">
-          Points: {points}
-        </p>
-
-        <p className="mt-3 text-xs leading-relaxed text-[#b8c8d0]">{tagline}</p>
-
-        {/* price */}
-        <div className="mt-5 flex flex-col items-center">
-          <div className="flex items-end gap-2">
-            <span className="text-3xl font-bold text-[#f7faf7]">
-              ₹{price.toLocaleString("en-IN")}
-            </span>
-            <span className="mb-1 text-xs text-[#7f9180] line-through">
-              ₹{original.toLocaleString("en-IN")}
-            </span>
-          </div>
-          <span className="mt-1 rounded-full bg-[#0f1820] px-3 py-0.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#7ba3b8]">
-            50% early bird
+      {/* Bloom: refined pill + soft accent line */}
+      {featured && (
+        <div className="relative z-10 mb-2.5 flex w-full max-w-full flex-col items-center sm:mb-3">
+          <div
+            className="h-px w-16 rounded-full sm:w-20"
+            style={{ background: "linear-gradient(90deg, transparent, rgba(168,188,165,0.4), transparent)" }}
+          />
+          <span className="mt-2 rounded-full border border-[#2a3530] bg-[#0c1210] px-3 py-0.5 text-[9px] font-medium uppercase tracking-[0.2em] text-[#9cb5b0] sm:text-[10px]">
+            Most Popular
           </span>
         </div>
+      )}
 
-        {/* quick highlights */}
-        <ul className="mt-4 space-y-1.5 text-xs">
-          {perks.slice(0, 3).map((perk) => (
-            <li
-              key={perk.label}
-              className="flex items-center justify-center gap-2"
-            >
-              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#7ba3b8]" />
-              <span className="font-medium text-[#a8c4d0]">{perk.value}</span>
-              <span className="text-[11px] text-[#7a9aaa]">· {perk.label}</span>
-            </li>
-          ))}
-        </ul>
+      {/* icon right above card — no circle, subtle shadow */}
+      <div className="relative z-10 mb-2 flex shrink-0 items-center justify-center transition-transform duration-300 group-hover:-translate-y-0.5 sm:mb-2.5">
+        <Image
+          src={iconSrc}
+          alt=""
+          width={40}
+          height={40}
+          className="h-9 w-9 shrink-0 drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)] sm:h-11 sm:w-11"
+        />
+      </div>
 
-        {/* CTA */}
-        <div className="mt-6 w-full">
-          <JoinTierButton tierName={name} className="w-full" />
+      {/* card body — Bloom: vertical gradient + reflective edges + diffused shadow */}
+      <div
+        className={`relative z-10 flex w-full min-w-0 max-w-full flex-col items-center overflow-hidden rounded-2xl border text-center sm:rounded-[2.1rem] ${
+          featured
+            ? "border-[#2a3530] px-4 pb-6 pt-8 sm:px-7 sm:pb-8 sm:pt-10"
+            : "border-[#1f2a24] bg-[#050807] px-4 pb-6 pt-8 shadow-[0_14px_36px_rgba(0,0,0,0.75)] sm:px-7 sm:pb-8 sm:pt-10"
+        }`}
+        style={{
+          ...(featured && {
+            background: "linear-gradient(180deg, #0c1210 0%, #0a0f0d 25%, #0d1612 55%, rgba(22,163,74,0.14) 85%, rgba(34,197,94,0.08) 100%)",
+            boxShadow:
+              "0 0 0 1px rgba(255,255,255,0.06) inset, 0 0 32px rgba(0,0,0,0.5), 0 0 64px rgba(0,0,0,0.35), 0 24px 48px rgba(0,0,0,0.5)",
+          }),
+          ...(!featured && { borderColor }),
+        }}
+      >
+        {/* Bloom-only: reflective top and left edge (glass-style highlight) */}
+        {featured && (
+          <>
+            <div
+              className="pointer-events-none absolute inset-x-0 top-0 h-px rounded-t-2xl sm:rounded-t-[2.1rem]"
+              style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.18), rgba(255,255,255,0.12), transparent)" }}
+            />
+            <div
+              className="pointer-events-none absolute left-0 top-0 bottom-0 w-px rounded-l-2xl sm:rounded-l-[2.1rem]"
+              style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06) 30%, transparent 70%)" }}
+            />
+          </>
+        )}
+        <div className="relative z-10 flex w-full min-w-0 max-w-full flex-col items-center">
+          <h3
+            className="text-xl font-semibold text-[#f7faf7] sm:text-2xl"
+            style={{ fontFamily: "var(--font-pricing-serif)" }}
+          >
+            {name}
+          </h3>
+
+          <p className="mt-0.5 text-[11px] font-medium text-[#7ba3b8] sm:mt-1 sm:text-xs">
+            Points: {points}
+          </p>
+
+          <p className="mt-2 line-clamp-2 text-[11px] leading-relaxed text-[#b8c8d0] sm:mt-3 sm:text-xs">
+            {tagline}
+          </p>
+
+          <div className="mt-4 flex flex-col items-center sm:mt-5">
+            <div className="flex flex-wrap items-end justify-center gap-2">
+              <span className="text-2xl font-bold text-[#f7faf7] sm:text-3xl">
+                ₹{price.toLocaleString("en-IN")}
+              </span>
+              <span className="mb-0.5 text-xs text-[#7f9180] line-through sm:mb-1">
+                ₹{original.toLocaleString("en-IN")}
+              </span>
+            </div>
+            <span className="mt-1 rounded-full bg-[#0f1820] px-2.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-[#7ba3b8] sm:px-3 sm:text-[10px] sm:tracking-[0.18em]">
+              50% early bird
+            </span>
+          </div>
+
+          <ul className="mt-3 space-y-1 text-[11px] sm:mt-4 sm:space-y-1.5 sm:text-xs">
+            {perks.slice(0, 3).map((perk) => (
+              <li
+                key={perk.label}
+                className="flex items-center justify-center gap-2"
+              >
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#A8BCA5]" />
+                <span className="font-medium text-[#f1f5f9]">{perk.value}</span>
+                <span className="text-[#8ba3b5]">· {perk.label}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-5 w-full min-w-0 sm:mt-6">
+            <JoinTierButton tierName={name} className="w-full" />
+          </div>
         </div>
       </div>
     </article>
@@ -383,7 +437,7 @@ function ArchCard({ tier }: { tier: Tier }) {
 /* ─── Mobile perk card ───────────────────────────────────── */
 
 function MobilePerkCard({ tier }: { tier: Tier }) {
-  const { name, price, original, Icon, accent, borderColor, perks } = tier;
+  const { name, price, original, iconSrc, borderColor, perks } = tier;
 
   return (
     <div
@@ -391,14 +445,18 @@ function MobilePerkCard({ tier }: { tier: Tier }) {
       style={{ borderColor: borderColor }}
     >
       {/* header — dark theme */}
-      <div
-        className="flex items-center gap-3 border-b border-[#18211d] bg-[#0c1410] px-4 py-4"
-      >
+      <div className="flex items-center gap-3 border-b border-[#18211d] bg-[#0c1410] px-4 py-4">
         <div
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#111816]"
           style={{ border: `1px solid ${borderColor}` }}
         >
-          <Icon size={18} style={{ color: accent }} />
+          <Image
+            src={iconSrc}
+            alt=""
+            width={26}
+            height={26}
+            className="shrink-0"
+          />
         </div>
         <div className="min-w-0 flex-1">
           <h3
@@ -421,19 +479,22 @@ function MobilePerkCard({ tier }: { tier: Tier }) {
           </div>
         </div>
         <div className="ml-auto shrink-0 min-w-0">
-          <JoinTierButton tierName={name} className="text-xs py-2 px-4 [&_svg]:w-3 [&_svg]:h-3" />
+          <JoinTierButton tierName={name} />
         </div>
       </div>
 
       {/* perk rows — dark theme */}
       <div className="divide-y divide-[#18211d] bg-[#050807] px-4">
         {perks.map(({ label, value }) => (
-          <div key={label} className="flex items-center justify-between gap-3 py-3">
-            <span className="flex items-center gap-2 text-xs text-[#7a9aaa]">
-              <Check size={12} className="text-[#7ba3b8]" />
+          <div
+            key={label}
+            className="flex items-center justify-between gap-3 py-3"
+          >
+            <span className="flex items-center gap-2 text-xs text-[#8ba3b5]">
+              <Check size={12} className="text-[#A8BCA5]" />
               {label}
             </span>
-            <span className="text-xs font-semibold text-[#e4eee6] shrink-0">
+            <span className="text-xs font-semibold text-[#f1f5f9] shrink-0">
               {value}
             </span>
           </div>

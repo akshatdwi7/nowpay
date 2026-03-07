@@ -40,6 +40,10 @@ export default function Navbar() {
       >
         <a
           href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
           className="flex items-center gap-2 text-[#f7faf7] no-underline outline-none focus-visible:ring-2 focus-visible:ring-[#A8BCA5] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050807]"
           style={{ fontFamily: "var(--font-nav-brand)" }}
         >

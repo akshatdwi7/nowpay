@@ -38,23 +38,23 @@ export default function Hero() {
 
       <div className="relative mx-auto w-full max-w-5xl text-center">
         <h1 className="text-4xl leading-[1.05] font-medium tracking-[-0.02em] text-[#f7faf7] sm:text-6xl sm:font-semibold sm:tracking-[-0.03em] lg:text-7xl">
-          Built for Peak
+          Built for
         </h1>
 
         <div className="relative mt-4 inline-flex sm:mt-6">
           <span className="pointer-events-none absolute inset-x-6 -bottom-4 h-7 rounded-full bg-black/60 blur-xl sm:h-9" />
           <span className="pointer-events-none absolute -inset-px rounded-4xl bg-[linear-gradient(140deg,#050807_0%,#101712_35%,#A8BCA5_100%)]" />
           <p
-            className={`${accentSerif.variable} glow-pill relative inline-flex items-center rounded-[1.9rem] border border-white/40 bg-[linear-gradient(135deg,rgba(5,8,7,0.96)_0%,rgba(20,27,23,0.96)_46%,rgba(15,23,19,0.98)_100%)] px-7 py-3 text-4xl font-medium italic tracking-tight text-[#E8F1EB] [text-shadow:0_1px_10px_rgba(0,0,0,0.7)] sm:px-11 sm:py-4 sm:text-6xl`}
+            className={`${accentSerif.variable} glow-pill relative inline-flex items-center justify-center rounded-[1.9rem] border border-white/40 bg-[linear-gradient(135deg,rgba(5,8,7,0.96)_0%,rgba(20,27,23,0.96)_46%,rgba(15,23,19,0.98)_100%)] px-7 py-3 text-4xl font-medium italic tracking-tight text-[#E8F1EB] [text-shadow:0_1px_10px_rgba(0,0,0,0.7)] sm:px-11 sm:py-4 sm:text-6xl`}
             style={{ fontFamily: "var(--font-accent-serif)", fontStyle: "italic" }}
           >
-            Performers
+            Peak&nbsp;Performers
           </p>
         </div>
 
         <p className="mx-auto mt-6 max-w-xl text-[13px] leading-relaxed text-[#9cb5b0] sm:mt-8 sm:max-w-2xl sm:text-base">
-          Build a high-performance life that still feels aligned with who you are:
-          clear rituals, deep focus, and quiet momentum.
+          Build a high-performance life that still feels aligned through daily rituals,
+          deep focus and quiet momentum.
         </p>
 
         <div className="mt-8 flex w-full flex-col items-center gap-2.5 sm:mt-10 sm:gap-3">

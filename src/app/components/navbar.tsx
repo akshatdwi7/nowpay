@@ -1,6 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { Lora, Manrope } from "next/font/google";
+import nowwLogo from "@/icons/nowwlogo.svg";
 
 const brandSerif = Lora({
   subsets: ["latin"],
@@ -18,7 +20,7 @@ const navSans = Manrope({
 export default function Navbar() {
   return (
     <header
-      className={`${brandSerif.variable} ${navSans.variable} sticky top-0 z-50 w-full overflow-hidden`}
+      className={`${brandSerif.variable} ${navSans.variable} sticky top-0 z-50 w-full overflow-hidden rounded-b-2xl border-b border-[#1b2620] bg-[#050807]/95 backdrop-blur-sm`}
     >
       {/* same dark base + soft gradient as hero */}
       <div className="absolute inset-0 bg-[#050807]" />
@@ -47,7 +49,13 @@ export default function Navbar() {
           className="flex items-center gap-2 text-[#f7faf7] no-underline outline-none focus-visible:ring-2 focus-visible:ring-[#A8BCA5] focus-visible:ring-offset-2 focus-visible:ring-offset-[#050807]"
           style={{ fontFamily: "var(--font-nav-brand)" }}
         >
-          <span className="text-xl font-normal italic tracking-tight text-[#E8F1EB] sm:text-2xl">
+          <Image
+            src={nowwLogo}
+            alt="Noww logo"
+            className="h-8 w-auto rounded-[30px] sm:h-10"
+            priority
+          />
+          <span className="text-lg font-normal italic tracking-tight text-[#E8F1EB] sm:text-xl">
             Noww Club
           </span>
         </a>

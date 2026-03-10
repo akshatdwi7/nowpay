@@ -6,6 +6,7 @@ import { Check, Zap } from "lucide-react";
 import seedIcon from "@/icons/seed.png";
 import bloomIcon from "@/icons/bloom.png";
 import thriveIcon from "@/icons/thrive.png";
+import coinIcon from "@/icons/coin.png";
 
 const titleSerif = Cormorant_Garamond({
   subsets: ["latin"],
@@ -26,7 +27,7 @@ const tiers = [
   {
     id: "seed",
     name: "Seed",
-    points: "0+",
+    points: "0",
     tagline: "Sign up and enter the rewards loop with member-only updates.",
     price: 999,
     original: 1999,
@@ -38,19 +39,16 @@ const tiers = [
     featured: false,
     perks: [
       { label: "Validity", value: "1 month" },
-      { label: "Reward multiple", value: "1×" },
-      { label: "Welcome voucher", value: "₹250" },
-      { label: "Priority support", value: "Standard" },
-      { label: "Exclusive member drops", value: "—" },
+      { label: "Support", value: "Standard in-app support" },
       { label: "Alignment Circles", value: "Ticketed Access" },
     ],
   },
   {
     id: "bloom",
     name: "Bloom",
-    points: "1000+",
+    points: "499",
     tagline:
-      "Unlock stronger earnings and early access once you hit 1000 points.",
+      "Unlock stronger earnings and early access once you hit 499 coins.",
     price: 2499,
     original: 4999,
     iconSrc: bloomIcon,
@@ -61,17 +59,14 @@ const tiers = [
     featured: true,
     perks: [
       { label: "Validity", value: "3 months" },
-      { label: "Reward multiple", value: "1.2×" },
-      { label: "Welcome voucher", value: "₹750" },
-      { label: "Priority support", value: "Within 24 h" },
-      { label: "Exclusive member drops", value: "Quarterly" },
+      { label: "Support", value: "Guided support" },
       { label: "Alignment Circles", value: "1 Alignment Circle included" },
     ],
   },
   {
     id: "thrive",
     name: "Thrive",
-    points: "2500+",
+    points: "1499",
     tagline: "Highest tier — priority treatment and premium experiences.",
     price: 7999,
     original: 15999,
@@ -83,10 +78,7 @@ const tiers = [
     featured: false,
     perks: [
       { label: "Validity", value: "12 months" },
-      { label: "Reward multiple", value: "1.5×" },
-      { label: "Welcome voucher", value: "₹2,000" },
-      { label: "Priority support", value: "Within 6 h" },
-      { label: "Exclusive member drops", value: "Monthly" },
+      { label: "Support", value: "Priority support" },
       {
         label: "Alignment Circles",
         value: "Includes 4 Alignment Circles + priority access",
@@ -97,14 +89,7 @@ const tiers = [
 
 type Tier = (typeof tiers)[number];
 
-const PERK_LABELS = [
-  "Validity",
-  "Reward multiple",
-  "Welcome voucher",
-  "Priority support",
-  "Exclusive member drops",
-  "Alignment Circles",
-] as const;
+const PERK_LABELS = ["Validity", "Support", "Alignment Circles"] as const;
 
 /* ─── shared join button (border magic, green) ──────────── */
 
@@ -243,6 +228,24 @@ export default function Pricing() {
                   })}
                 </tr>
               ))}
+              {/* now coins row */}
+              <tr className="border-t border-[#18211d] bg-[#050807]">
+                <td className="px-6 py-4 text-xs font-semibold tracking-[0.14em] text-[#7ba3b8] uppercase">
+                  <span className="inline-flex items-center gap-2">
+                    <Image
+                      src={coinIcon}
+                      alt="Now coins"
+                      className="h-4 w-4 sm:h-5 sm:w-5"
+                    />
+                    <span>Now Coins</span>
+                  </span>
+                </td>
+                {tiers.map((t) => (
+                  <td key={t.id} className="px-6 py-4 text-sm font-semibold text-[#f1f5f9]">
+                    {t.points}
+                  </td>
+                ))}
+              </tr>
               {/* price row */}
               <tr className="border-t border-[#18211d] bg-[#050807]">
                 <td className="px-6 py-4 text-xs font-semibold tracking-[0.14em] text-[#7ba3b8] uppercase">
@@ -391,7 +394,7 @@ function ArchCard({ tier }: { tier: Tier }) {
           </h3>
 
           <p className="mt-0.5 text-[11px] font-medium text-[#7ba3b8] sm:mt-1 sm:text-xs">
-            Points: {points}
+            Coins: {points}
           </p>
 
           <p className="mt-2 line-clamp-2 text-[11px] leading-relaxed text-[#b8c8d0] sm:mt-3 sm:text-xs">

@@ -27,48 +27,41 @@ const brandSerif = Lora({
 });
 
 function fireConfetti() {
-  const duration = 2200;
-  const end = Date.now() + duration;
-  const colors = ["#A8BCA5", "#22c55e", "#4ade80", "#e8f1eb", "#b8c8d0"];
+  const colors = ["#A8BCA5", "#86efac", "#e8f1eb"];
 
-  (function frame() {
-    confetti({
-      particleCount: 3,
-      angle: 60,
-      spread: 55,
-      origin: { x: 0, y: 0.7 },
-      colors,
-    });
-    confetti({
-      particleCount: 3,
-      angle: 120,
-      spread: 55,
-      origin: { x: 1, y: 0.7 },
-      colors,
-    });
-    if (Date.now() < end) requestAnimationFrame(frame);
-  })();
+  // Single soft burst from center — refined, not overwhelming
+  confetti({
+    particleCount: 45,
+    spread: 60,
+    origin: { y: 0.55 },
+    colors,
+    scalar: 0.85,
+    ticks: 180,
+    gravity: 0.9,
+    drift: 0.2,
+  });
 
+  // One gentle follow-up from the sides, delayed slightly
   setTimeout(() => {
     confetti({
-      particleCount: 120,
-      spread: 100,
-      origin: { y: 0.6 },
+      particleCount: 18,
+      angle: 70,
+      spread: 45,
+      origin: { x: 0.2, y: 0.65 },
       colors,
-      scalar: 1.1,
+      scalar: 0.75,
+      ticks: 120,
     });
-  }, 200);
-
-  setTimeout(() => {
     confetti({
-      particleCount: 80,
-      angle: 90,
-      spread: 100,
-      origin: { y: 0.5 },
+      particleCount: 18,
+      angle: 110,
+      spread: 45,
+      origin: { x: 0.8, y: 0.65 },
       colors,
-      scalar: 0.9,
+      scalar: 0.75,
+      ticks: 120,
     });
-  }, 600);
+  }, 280);
 }
 
 export default function EnrolledPage() {
@@ -77,7 +70,7 @@ export default function EnrolledPage() {
   useEffect(() => {
     if (hasFired.current) return;
     hasFired.current = true;
-    const t = setTimeout(fireConfetti, 320);
+    const t = setTimeout(fireConfetti, 480);
     return () => clearTimeout(t);
   }, []);
 

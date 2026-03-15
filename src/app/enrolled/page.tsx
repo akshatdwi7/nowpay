@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
-import { Cormorant_Garamond, Lora, Manrope } from "next/font/google";
+import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { CheckCircle2 } from "lucide-react";
+import clubCard from "@/icons/club.png";
 
 const accentSerif = Cormorant_Garamond({
   subsets: ["latin"],
@@ -17,13 +19,6 @@ const bodySans = Manrope({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-enrolled-sans",
-});
-
-const brandSerif = Lora({
-  subsets: ["latin"],
-  weight: ["500", "600"],
-  style: ["italic", "normal"],
-  variable: "--font-enrolled-brand",
 });
 
 function fireConfetti() {
@@ -98,17 +93,6 @@ export default function EnrolledPage() {
       />
 
       <div className="relative mx-auto w-full max-w-lg">
-        {/* brand — minimal */}
-        <Link
-          href="/"
-          className={`${brandSerif.variable} group mb-10 inline-block rounded-2xl border border-[#1f2a24] bg-[#0a0f0c]/60 px-5 py-2.5 backdrop-blur-sm transition-all duration-200 hover:border-[#A8BCA5]/25 focus:outline-none focus:ring-2 focus:ring-[#A8BCA5]/40 focus:ring-offset-2 focus:ring-offset-[#050807] sm:mb-12`}
-          aria-label="Noww Club home"
-        >
-          <span className="text-xl italic tracking-tight text-[#e8f1eb] sm:text-2xl" style={{ fontFamily: "var(--font-enrolled-brand)" }}>
-            Noww Club
-          </span>
-        </Link>
-
         {/* card — scale-in + CRED-like clean block */}
         <div
           className="relative overflow-hidden rounded-[1.75rem] border border-[#1a2420] bg-[#080c0a]/90 px-6 py-12 backdrop-blur-md sm:rounded-4xl sm:px-12 sm:py-16"
@@ -138,8 +122,31 @@ export default function EnrolledPage() {
             <CheckCircle2 className="h-8 w-8 text-[#A8BCA5] sm:h-9 sm:w-9" strokeWidth={2} aria-hidden />
           </div>
 
+          {/* Noww Club card — welcome to the club */}
+          <div
+            className="relative mx-auto mt-6 w-full max-w-[280px] sm:mt-8 sm:max-w-[320px] md:max-w-[340px]"
+            style={{ animation: "enrolledTextIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.28s both" }}
+          >
+            <div
+              className="relative overflow-hidden rounded-xl sm:rounded-2xl"
+              style={{
+                boxShadow: "0 0 0 1px rgba(255,255,255,0.05) inset, 0 24px 48px rgba(0,0,0,0.45), 0 12px 24px rgba(0,0,0,0.3)",
+              }}
+            >
+              <Image
+                src={clubCard}
+                alt="Noww Club membership card — Welcome to the club"
+                width={340}
+                height={214}
+                className="w-full rounded-xl object-cover sm:rounded-2xl"
+                sizes="(max-width: 640px) 280px, (max-width: 768px) 320px, 340px"
+                priority
+              />
+            </div>
+          </div>
+
           <h1
-            className={`${accentSerif.variable} mt-8 text-3xl font-semibold italic leading-tight text-[#f0f5f1] sm:mt-10 sm:text-4xl md:text-[2.75rem]`}
+            className={`${accentSerif.variable} mt-6 text-3xl font-semibold italic leading-tight text-[#f0f5f1] sm:mt-8 sm:text-4xl md:text-[2.75rem]`}
             style={{
               fontFamily: "var(--font-enrolled-serif)",
               animation: "enrolledTextIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both",

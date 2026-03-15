@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { Check, Zap } from "lucide-react";
@@ -41,6 +42,7 @@ const tiers = [
       { label: "Validity", value: "1 month" },
       { label: "Support", value: "Standard in-app support" },
       { label: "Alignment Circles", value: "Ticketed Access" },
+      { label: "Reward multiple", value: "1x" },
     ],
   },
   {
@@ -61,6 +63,7 @@ const tiers = [
       { label: "Validity", value: "3 months" },
       { label: "Support", value: "Guided support" },
       { label: "Alignment Circles", value: "1 Alignment Circle included" },
+      { label: "Reward multiple", value: "1.2x" },
     ],
   },
   {
@@ -83,28 +86,105 @@ const tiers = [
         label: "Alignment Circles",
         value: "Includes 4 Alignment Circles + priority access",
       },
+      { label: "Reward multiple", value: "1.5x" },
     ],
   },
 ] as const;
 
 type Tier = (typeof tiers)[number];
 
-const PERK_LABELS = ["Validity", "Support", "Alignment Circles"] as const;
+const PERK_LABELS = ["Validity", "Support", "Alignment Circles", "Reward multiple"] as const;
+
+/* ─── Razorpay checkout (global type for script) ──────────── */
+
+declare global {
+  interface Window {
+    Razorpay: new (options: {
+      key: string;
+      order_id: string;
+      amount: number;
+      currency: string;
+      name: string;
+      description: string;
+      handler: (response: {
+        razorpay_payment_id: string;
+        razorpay_order_id: string;
+        razorpay_signature: string;
+      }) => void;
+      modal?: { ondismiss?: () => void };
+    }) => { open: () => void };
+  }
+}
 
 /* ─── shared join button (border magic, green) ──────────── */
 
 function JoinTierButton({
+  tierId,
   tierName,
+  price,
   className = "",
 }: {
+  tierId: string;
   tierName: string;
+  price: number;
   className?: string;
 }) {
+  const [loading, setLoading] = useState(false);
+
+  const openRazorpay = async () => {
+    if (loading) return;
+    setLoading(true);
+    try {
+      const res = await fetch("/api/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tierId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed to create order");
+
+      const amountPaise = price * 100;
+      const options = {
+        key: data.keyId,
+        order_id: data.orderId,
+        amount: data.amount ?? amountPaise,
+        currency: data.currency ?? "INR",
+        name: "Noww Club",
+        description: `Join ${tierName}`,
+        handler: function (
+          response: {
+            razorpay_payment_id: string;
+            razorpay_order_id: string;
+            razorpay_signature: string;
+          }
+        ) {
+          setLoading(false);
+          // Payment success – redirect to enrolled page
+          window.location.href = "/enrolled";
+        },
+        modal: { ondismiss: () => setLoading(false) },
+      };
+
+      if (typeof window === "undefined" || !window.Razorpay) {
+        setLoading(false);
+        throw new Error("Razorpay checkout not loaded. Please refresh and try again.");
+      }
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (e) {
+      console.error(e);
+      setLoading(false);
+      alert(e instanceof Error ? e.message : "Something went wrong");
+    }
+  };
+
   return (
     <button
       type="button"
+      onClick={openRazorpay}
+      disabled={loading}
       className={
-        "relative inline-flex h-12 min-w-0 items-center justify-center overflow-hidden rounded-full p-px focus:outline-none focus:ring-2 focus:ring-[#A8BCA5]/70 focus:ring-offset-2 focus:ring-offset-[#050807] sm:h-13 " +
+        "relative inline-flex h-12 min-w-0 items-center justify-center overflow-hidden rounded-full p-px focus:outline-none focus:ring-2 focus:ring-[#A8BCA5]/70 focus:ring-offset-2 focus:ring-offset-[#050807] sm:h-13 disabled:opacity-70 " +
         className
       }
     >
@@ -113,7 +193,7 @@ function JoinTierButton({
         aria-hidden
       />
       <span className="relative inline-flex h-full w-full items-center justify-center rounded-full bg-[#050807] px-4 py-2 text-sm font-medium tracking-wide text-[#f5f8f5] backdrop-blur-sm">
-        Join {tierName}
+        {loading ? "Opening…" : `Join ${tierName}`}
       </span>
     </button>
   );
@@ -269,7 +349,12 @@ export default function Pricing() {
                 <td className="px-6 py-4" />
                 {tiers.map((t) => (
                   <td key={t.id} className="px-6 py-4">
-                    <JoinTierButton tierName={t.name} className="w-full" />
+                    <JoinTierButton
+                      tierId={t.id}
+                      tierName={t.name}
+                      price={t.price}
+                      className="w-full"
+                    />
                   </td>
                 ))}
               </tr>
@@ -416,7 +501,7 @@ function ArchCard({ tier }: { tier: Tier }) {
           </div>
 
           <ul className="mt-3 space-y-1 text-[11px] sm:mt-4 sm:space-y-1.5 sm:text-xs">
-            {perks.slice(0, 3).map((perk) => (
+            {perks.map((perk) => (
               <li
                 key={perk.label}
                 className="flex items-center justify-center gap-2"
@@ -429,7 +514,12 @@ function ArchCard({ tier }: { tier: Tier }) {
           </ul>
 
           <div className="mt-5 w-full min-w-0 sm:mt-6">
-            <JoinTierButton tierName={name} className="w-full" />
+            <JoinTierButton
+              tierId={tier.id}
+              tierName={tier.name}
+              price={tier.price}
+              className="w-full"
+            />
           </div>
         </div>
       </div>
@@ -482,7 +572,11 @@ function MobilePerkCard({ tier }: { tier: Tier }) {
           </div>
         </div>
         <div className="ml-auto shrink-0 min-w-0">
-          <JoinTierButton tierName={name} />
+          <JoinTierButton
+            tierId={tier.id}
+            tierName={tier.name}
+            price={tier.price}
+          />
         </div>
       </div>
 
